@@ -34,7 +34,7 @@ public class ProductsController {
 		/* if (circuiteBreaker) {
 			throw new Exception("Circuit breaker error");
 		}
-
+		 
 		try {
 			Thread.sleep(2000l);
 		} catch (InterruptedException e) {
