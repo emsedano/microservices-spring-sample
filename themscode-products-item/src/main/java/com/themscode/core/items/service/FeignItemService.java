@@ -16,11 +16,12 @@ public class FeignItemService implements ItemService {
 	ProductFeignClient feignClient;
 		
 	public List<CartItem> products() {
-		System.out.println("*********************** HELLO FEIGN ************************");
+		System.out.println("*********** FEIGN  CLIENT **********");
 		return this.feignClient.products().stream().map(product -> new CartItem(product, 1)).collect(Collectors.toList());
 	}
 
 	public CartItem item(Long id, Integer quantity) {
+
 		return new CartItem(this.feignClient.productItem(id), 1);
 	}
 

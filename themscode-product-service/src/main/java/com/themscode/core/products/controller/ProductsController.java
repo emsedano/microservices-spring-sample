@@ -26,13 +26,26 @@ public class ProductsController {
 	private IProductsService productsService;
 	
 	@GetMapping("/products")
-	public List<Product> products() {
+	public List<Product> products() throws Exception {
 		System.out.println("*********** Reading prodcuts at: " + this.env.getProperty("server.port") + " / "  + this.port);
+		boolean circuiteBreaker = Math.random() > 0.95;
+		System.out.println("circuiteBreaker value: " + circuiteBreaker);
+		// to demonstrate hystrix and ribbon (failure tolerance
+		/* if (circuiteBreaker) {
+			throw new Exception("Circuit breaker error");
+		}
+
+		try {
+			Thread.sleep(2000l);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
 		return this.productsService.getAll();
 	}
 	
 	@GetMapping("/products/{id}")
 	public Product getProduct(@PathVariable Long id) {
+		
 		return this.productsService.findById(id);
 	}
 
