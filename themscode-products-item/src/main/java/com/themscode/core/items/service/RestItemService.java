@@ -7,11 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.themscode.core.items.model.CartItem;
-import com.themscode.core.items.model.Product;
+import com.themscode.commons.models.entity.Product;
 
 @Service("restItemService")
 public class RestItemService implements ItemService {
@@ -30,6 +33,30 @@ public class RestItemService implements ItemService {
 		params.put("id", id.toString());
 		Product product = this.restClient.getForObject("http://product-service/products/{id}", Product.class, params);
 		return new CartItem(product, quantity);
+	}
+
+	
+	public Product save(Product product) {
+		HttpEntity<Product> body = new HttpEntity<Product>(product);
+		ResponseEntity<Product> response = restClient.exchange("http://product-service/products/", HttpMethod.POST, body, Product.class);
+		return response.getBody();
+	}
+
+	
+	public Product update(Long id, Product product) {
+		HttpEntity<Product> body = new HttpEntity<Product>(product);
+		Map<String, String> params = new HashMap<>();
+		params.put("id", id.toString());
+		ResponseEntity<Product> response = restClient.exchange("http://product-service/products/{id}", 
+				HttpMethod.PUT, body, Product.class, params);
+		return response.getBody();
+	}
+
+	
+	public void delete(Long id) {
+		Map<String, String> params = new HashMap<>();
+		params.put("id", id.toString());
+		restClient.delete("http://product-service/products/{id}", params);
 	}
 
 }

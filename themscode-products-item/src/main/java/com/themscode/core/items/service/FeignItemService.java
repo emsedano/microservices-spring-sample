@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.themscode.core.items.clients.ProductFeignClient;
 import com.themscode.core.items.model.CartItem;
+import com.themscode.commons.models.entity.Product;
 
 @Service("feignItemService")
 public class FeignItemService implements ItemService {
@@ -21,8 +22,21 @@ public class FeignItemService implements ItemService {
 	}
 
 	public CartItem item(Long id, Integer quantity) {
-
 		return new CartItem(this.feignClient.productItem(id), 1);
+	}
+
+	
+	public Product save(Product product) {
+		return feignClient.save(product);
+	}
+
+	
+	public Product update(Long id, Product product) {
+		return feignClient.update(id, product);	
+	}
+
+	public void delete(Long id) {
+		feignClient.deleteById(id);
 	}
 
 }

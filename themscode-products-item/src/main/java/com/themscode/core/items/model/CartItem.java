@@ -1,5 +1,7 @@
 package com.themscode.core.items.model;
 
+import com.themscode.commons.models.entity.Product;
+
 public class CartItem {
 
 	private Integer quantity;

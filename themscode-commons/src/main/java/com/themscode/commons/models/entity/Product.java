@@ -1,4 +1,4 @@
-package com.themscode.core.products.data.entity;
+package com.themscode.commons.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
