@@ -3,8 +3,10 @@ package com.themscode.sso.authconf;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
+@RefreshScope
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	
@@ -28,6 +31,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	
 	@Autowired
 	private TokenClaimsAdapter claimsAdapter;
+	
+	@Autowired
+	private Environment env;
 	
 	
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -52,7 +58,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-		tokenConverter.setSigningKey("themscode-secret-holo");
+		tokenConverter.setSigningKey(env.getProperty("config.security.oauth.jwt.key"));
 		return tokenConverter;
 	}
 
@@ -65,8 +71,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-		.withClient("themscode-client-id")
-		.secret(passwordEncoder.encode("secret-holo"))
+		.withClient(env.getProperty("config.security.oauth.client.id"))
+		.secret(passwordEncoder.encode(env.getProperty("config.security.oauth.client.secret")))
 		.scopes("read", "write")
 		.authorizedGrantTypes("password", "refresh_token")
 		.accessTokenValiditySeconds(3600)
