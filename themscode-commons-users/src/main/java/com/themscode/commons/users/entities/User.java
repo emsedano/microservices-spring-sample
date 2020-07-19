@@ -42,6 +42,8 @@ public class User implements Serializable {
 
 	@Column()
 	private Boolean active;
+	
+	private Integer attempts;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {
@@ -102,6 +104,14 @@ public class User implements Serializable {
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Integer getAttempts() {
+		return attempts;
+	}
+
+	public void setAttempts(Integer attempts) {
+		this.attempts = attempts;
 	}
 
 }
